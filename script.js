@@ -30,19 +30,18 @@ function saveCityNameToArray(object) {
 
 
 function generateButtons(){
-    var btnGroup = $(".button-group")
+
+    var btnGroup = $(".button-group");
     btnGroup.empty();
+
     savedCities.forEach(element => {
-        var cityBtn = $("<button type='button' id='city-btn' class='btn btn-dark btn-lg btn-block'>");
+        var cityBtn = $("<button type='button' class='city-btn btn btn-dark btn-lg btn-block'>");
         cityBtn.text(element);
         btnGroup.append(cityBtn);
         console.log("cities: " + element);
         console.log(cityBtn);
     });
-    
-    
-}
-
+};
 
 
 function openWeatherAPIRequest() {
@@ -68,7 +67,7 @@ function openWeatherAPIRequest() {
         lat = response.city.coord.lat;
         lng = response.city.coord.lon;
 
-        console.log("response:", response);
+        // console.log("response:", response);
 
         response.list.forEach(element => {
 
@@ -86,14 +85,13 @@ function openWeatherAPIRequest() {
         console.log("Dates Array: ", datesArray);
         oneCallRequest(lat, lng);
         generateButtons();
-        $("#city-btn").on("click",  function () {
+
+        $(".city-btn").on("click",  function () {
+            console.log("clicked");
             city = $(this).text();
             console.log("clicked city: " + $(this).text());
-            console.log("clicked");
             openWeatherAPIRequest();
         });
-        
-        
     });
 };
 
@@ -139,7 +137,7 @@ function displayCurrentWeather(current) {
 
     currentWeatherDisplay.append(currentTemp, currentHumidity, currentWind, currentUV);
     console.log(current);
-}
+};
 
 
 
@@ -161,7 +159,7 @@ function displayFiveDayForecast(daily, date) {
     cardBody.append(cardTitle, $("<hr>"), icon, futureTemp, futureHumidity);
     card.append(cardBody);
     forecastDisplay.append(card);
-}
+};
 
 openWeatherAPIRequest();
 
