@@ -9,6 +9,8 @@ var currentWeatherDisplay = $("#display-current-weather");
 var datesArray = [];
 var savedCities = ["Atlanta"];
 
+var now = moment();
+
 
 $("#submit-btn").on("click", function () {
     city = $("#user-input").val();
@@ -45,7 +47,7 @@ function generateButtons(){
 
 
 function openWeatherAPIRequest() {
-    var queryURL = "http://api.openweathermap.org/data/2.5/forecast?q=" + city + "&appid=" + APIKey;
+    var queryURL = "http://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + APIKey;
     
     $.ajax({
         
@@ -53,45 +55,20 @@ function openWeatherAPIRequest() {
         method: "GET"
         
     }).then(function (response) {
+        console.log("response:", response);
         
-        saveCityNameToArray(response.city);
-        $("#current-city-name").text(response.city.name);
-        var dayText = response.list[0].dt_txt.split(" ");
-        var dateArray = dayText[0].split("-");
-        var day = "" + dateArray[1] + "/" + dateArray[2] + "/" + dateArray[0];
-        $("#current-date").text(day);
+        saveCityNameToArray(response);
+        $("#current-city-name").text(response.name);
+        $("#current-date").text(moment().add().format("dddd MMMM Do"));
         
         console.log("Currently saved cities: ", savedCities);
         currentWeatherDisplay.empty();
         forecastDisplay.empty();
-        lat = response.city.coord.lat;
-        lng = response.city.coord.lon;
+        lat = response.coord.lat;
+        lng = response.coord.lon;
 
-        // console.log("response:", response);
-
-        response.list.forEach(element => {
-
-            if (element.dt_txt.includes("12:00:00")) {
-
-                // console.log(element);
-                var dayText = element.dt_txt.split(" ");
-                var dateArray = dayText[0].split("-");
-                var day = "" + dateArray[1] + "/" + dateArray[2] + "/" + dateArray[0];
-                datesArray.push(day);
-                console.log("date:" + day);
-
-            };
-        });
-        console.log("Dates Array: ", datesArray);
         oneCallRequest(lat, lng);
-        generateButtons();
-
-        $(".city-btn").on("click",  function () {
-            console.log("clicked");
-            city = $(this).text();
-            console.log("clicked city: " + $(this).text());
-            openWeatherAPIRequest();
-        });
+       
     });
 };
 
@@ -112,11 +89,17 @@ function oneCallRequest(lat, lng) {
         for (i = 1; i < 6; i++) {
 
             console.log("five day: ", response.daily[i]);
-            displayFiveDayForecast(response.daily[i], datesArray[i]);
+            displayFiveDayForecast(response.daily[i], moment().add(i, 'days').format("dddd MMMM Do"));
         };
         
-        
-        
+        generateButtons();
+
+        $(".city-btn").on("click",  function () {
+            console.log("clicked");
+            city = $(this).text();
+            console.log("clicked city: " + $(this).text());
+            openWeatherAPIRequest();
+        });
     });
 };
 
