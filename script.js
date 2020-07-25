@@ -6,8 +6,8 @@ var APIKey = "90d9a6c424644e20ace24af65a026967";
 var queryURL = "";
 var forecastDisplay = $("#five-day-display");
 var currentWeatherDisplay = $("#display-current-weather");
-var datesArray = [];
-var savedCities = ["Atlanta"];
+
+var savedCitiesArray = ["Atlanta"];
 
 var now = moment();
 
@@ -22,11 +22,12 @@ $("#submit-btn").on("click", function () {
 
 function saveCityNameToArray(object) {
     
-    if (savedCities.includes(object.name)) {
+    if (savedCitiesArray.includes(object.name)) {
         console.log("city name already selected");
         return;
     } else {
-        savedCities.push(object.name);
+        savedCitiesArray.push(object.name);
+        storeCities();
     };
 };
 
@@ -35,8 +36,8 @@ function generateButtons(){
 
     var btnGroup = $(".button-group");
     btnGroup.empty();
-
-    savedCities.forEach(element => {
+    displayStoredCities();
+    savedCitiesArray.forEach(element => {
         var cityBtn = $("<button type='button' class='city-btn btn btn-dark btn-lg btn-block'>");
         cityBtn.text(element);
         btnGroup.append(cityBtn);
@@ -61,7 +62,7 @@ function openWeatherAPIRequest() {
         $("#current-city-name").text(response.name);
         $("#current-date").text(moment().add().format("dddd MMMM Do"));
         
-        console.log("Currently saved cities: ", savedCities);
+        console.log("Currently saved cities: ", savedCitiesArray);
         currentWeatherDisplay.empty();
         forecastDisplay.empty();
         lat = response.coord.lat;
@@ -142,6 +143,18 @@ function displayFiveDayForecast(daily, date) {
     cardBody.append(cardTitle, $("<hr>"), icon, futureTemp, futureHumidity);
     card.append(cardBody);
     forecastDisplay.append(card);
+};
+
+function storeCities() {
+    localStorage.setItem("savedCities", JSON.stringify(savedCitiesArray));
+};
+function displayStoredCities() {
+    
+    var storedCities = JSON.parse(localStorage.getItem("savedCities"));
+
+    if (storedCities != null) {
+        savedCitiesArray = storedCities;
+    };
 };
 
 openWeatherAPIRequest();
