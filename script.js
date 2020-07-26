@@ -60,7 +60,7 @@ function generateButtons(){
 
 
 function openWeatherAPIRequest() {
-    var queryURL = "http://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + APIKey;
+    var queryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + APIKey;
     
     $.ajax({
         
@@ -89,7 +89,7 @@ function openWeatherAPIRequest() {
 
 function oneCallRequest(lat, lng) {
 
-    var queryURL = "http://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lng + "&appid=" + APIKey;
+    var queryURL = "https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lng + "&appid=" + APIKey;
 
     $.ajax({
         url: queryURL,
@@ -121,7 +121,7 @@ function oneCallRequest(lat, lng) {
 function displayCurrentWeather(current) {
 
     var iconcode = current.weather[0].icon;
-    var iconURL = "http://openweathermap.org/img/w/" + iconcode + ".png";
+    var iconURL = "https://openweathermap.org/img/w/" + iconcode + ".png";
     $("#current-icon").attr("src", iconURL);
 
     var temp = Math.floor((current.temp - 273.15) * 1.80 + 32);
@@ -154,7 +154,7 @@ function displayFiveDayForecast(daily, date) {
     var cardTitle = $("<h3 class='card-title text-center'>").text(date);
 
     var iconcode = daily.weather[0].icon;
-    var iconURL = "http://openweathermap.org/img/w/" + iconcode + ".png";
+    var iconURL = "https://openweathermap.org/img/w/" + iconcode + ".png";
     var icon = $("<img class='icons' src=" + iconURL + " alt='Weather icon'>");
 
     var futureTemp = $("<h5>").text("Temp:  " + temp + " °F");
