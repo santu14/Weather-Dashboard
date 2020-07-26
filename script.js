@@ -3,7 +3,7 @@ var lat = "";
 var lng = "";
 
 var APIKey = "90d9a6c424644e20ace24af65a026967";
-var queryURL = "";
+
 var forecastDisplay = $("#five-day-display");
 var currentWeatherDisplay = $("#display-current-weather");
 
@@ -19,6 +19,17 @@ $("#submit-btn").on("click", function () {
     openWeatherAPIRequest();    
 });
 
+$(document).keypress(
+    function(event){
+      if (event.which == '13') {
+        event.preventDefault();
+        city = $("#user-input").val();
+        console.log("typed city: " + city);
+    
+        openWeatherAPIRequest(); 
+        $("#user-input").val("")
+      }
+  });
 
 function saveCityNameToArray(object) {
     
@@ -37,6 +48,7 @@ function generateButtons(){
     var btnGroup = $(".button-group");
     btnGroup.empty();
     displayStoredCities();
+
     savedCitiesArray.forEach(element => {
         var cityBtn = $("<button type='button' class='city-btn btn btn-dark btn-lg btn-block'>");
         cityBtn.text(element);
@@ -90,7 +102,7 @@ function oneCallRequest(lat, lng) {
         for (i = 1; i < 6; i++) {
 
             console.log("five day: ", response.daily[i]);
-            displayFiveDayForecast(response.daily[i], moment().add(i, 'days').format("dddd MMMM Do"));
+            displayFiveDayForecast(response.daily[i], moment().add(i, 'days').format("dddd"));
         };
         
         generateButtons();
@@ -117,7 +129,15 @@ function displayCurrentWeather(current) {
     var currentTemp = $("<h4>").text("Temperature: " + temp + " °F");
     var currentHumidity = $("<h4>").text("Humidity: " + current.humidity + "%");
     var currentWind = $("<h4>").text("Wind Speed: " + current.wind_speed + " MPH");
-    var currentUV = $("<h4 id='uvi'>").text("UV Index: " + current.uvi);
+    var currentUV = $("<h4 id='uvi'> ").text("UV Index: ");
+
+    if (current.uvi <= 2) {
+        currentUV.append("<span id='uvi-low'>" + current.uvi);
+    } else if (current.uvi > 2 && current.uvi <= 7) {
+        currentUV.append("<span id='uvi-mid'>" + current.uvi);
+    }else if ( current.uvi > 7){
+        currentUV.append("<span id='uvi-high'>" + current.uvi);
+    }
 
     currentWeatherDisplay.append(currentTemp, currentHumidity, currentWind, currentUV);
     console.log(current);
@@ -128,14 +148,14 @@ function displayCurrentWeather(current) {
 function displayFiveDayForecast(daily, date) {
 
     var temp = Math.floor((daily.temp.day - 273.15) * 1.80 + 32);
-    var card = $("<div class='card' id='daily-forecast' style='width: 16rem;'>");
+    var card = $("<div class='card daily-forecast'>");
 
     var cardBody = $("<div class='card-body'>");
     var cardTitle = $("<h3 class='card-title text-center'>").text(date);
 
     var iconcode = daily.weather[0].icon;
     var iconURL = "http://openweathermap.org/img/w/" + iconcode + ".png";
-    var icon = $("<img id='icons' src=" + iconURL + " alt='Weather icon'>");
+    var icon = $("<img class='icons' src=" + iconURL + " alt='Weather icon'>");
 
     var futureTemp = $("<h5>").text("Temp:  " + temp + " °F");
     var futureHumidity = $("<h5>").text("Humidity: " + daily.humidity + "%");
@@ -145,9 +165,11 @@ function displayFiveDayForecast(daily, date) {
     forecastDisplay.append(card);
 };
 
+
 function storeCities() {
     localStorage.setItem("savedCities", JSON.stringify(savedCitiesArray));
 };
+
 function displayStoredCities() {
     
     var storedCities = JSON.parse(localStorage.getItem("savedCities"));
