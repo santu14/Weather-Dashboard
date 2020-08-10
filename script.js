@@ -72,7 +72,7 @@ function openWeatherAPIRequest() {
         
         saveCityNameToArray(response);
         $("#current-city-name").text(response.name);
-        $("#current-date").text(moment().add().format("dddd MMMM Do"));
+        $("#current-date").text(now.format("dddd MMMM Do"));
         
         console.log("Currently saved cities: ", savedCitiesArray);
         currentWeatherDisplay.empty();
@@ -102,7 +102,7 @@ function oneCallRequest(lat, lng) {
         for (i = 1; i < 6; i++) {
 
             console.log("five day: ", response.daily[i]);
-            displayFiveDayForecast(response.daily[i], moment().add(i, 'days').format("dddd"));
+            displayFiveDayForecast(response.daily[i], now.add(i, 'days').format("dddd"));
         };
         
         generateButtons();

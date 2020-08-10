@@ -5,6 +5,7 @@ header{
     padding: 20px;
     background: rgb(23, 8, 37);
     height: 100px;
+    width: 100%;
     color: rgb(255, 255, 255);
     font-family: 'Bebas Neue', cursive;
 }
@@ -27,7 +28,7 @@ aside {
     margin: 10px;
 }
 .my-container {
-    margin-left: 15%;
+   margin-left: 60px;
     
 }
 form {
@@ -39,6 +40,7 @@ form {
     margin-top: 10px;
     height: 500px;
     margin-bottom: 30px;
+   
 
     
 }
